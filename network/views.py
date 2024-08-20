@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+import json
 
 from .models import User, Post
 
@@ -62,3 +63,31 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+#function to post a new post.
+#TODO:
+def post(request):
+    if request.method == "GET":
+        return HttpResponseNotAllowed("Method not allowed.")
+    
+    post_content = json.loads(request.body).get("content")
+    if not post_content:
+        return HttpResponseRedirect(reverse('index')) #we shouldn't let user create a empty post.
+    
+    Post.objects.create(user=request.user, content=post_content) #create new post.
+
+    return JsonResponse({
+        "message": "create post successfully."
+    }, status=200)
+
+# this function will provide all posts in database.
+def get_posts(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed("Method not allowed.")
+    
+    posts = Post.objects.all()
+
+    return JsonResponse({
+        "posts": posts
+    }, status=200)

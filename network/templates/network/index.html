@@ -3,6 +3,9 @@
 
 {% block script %}<script src="{% static 'network/index.js' %}"></script>{% endblock %}
 {% block body %}
+    <div id="messageDiv">
+
+    </div>
     <!-- User will write new post here-->
     <div class="newPost">
         <form id="postForm">
@@ -16,6 +19,7 @@
         {% for post in posts %}
             <div class="post">
                 <div class="postsContent">
+                <p class="postsUser"> {{ post.user.username }}</p>
                 {% if user == post.user %}
                 <button class="editBtn">Edit</button>
                 {% endif %}

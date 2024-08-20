@@ -10,5 +10,5 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     content = models.TextField()
     datetime = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(validators=[MinValueValidator(0)]) # minimun value of this field is 0..
+    likes = models.IntegerField(default=0, validators=[MinValueValidator(0)]) # minimun value of this field is 0..
 
