@@ -1,7 +1,7 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
-{% block script %}<script src="{% static 'network/index.js' %}"></script>{% endblock %}
+{% block script %}<script src="{% static 'network/index.js' %}" type="module" ></script>{% endblock %}
 {% block body %}
     <div id="messageDiv">
 
@@ -9,6 +9,7 @@
     <!-- User will write new post here-->
     <div class="newPost">
         <form id="postForm">
+            {% csrf_token %}
             <textarea id="userPostContent" autocomplete="of" placeholder="Write your post's content here."></textarea>
             <button type="submit">Post</button>
         </form>

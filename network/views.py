@@ -66,7 +66,6 @@ def register(request):
 
 
 #function to post a new post.
-#TODO:
 def post(request):
     if request.method == "GET":
         return HttpResponseNotAllowed("Method not allowed.")
@@ -81,13 +80,14 @@ def post(request):
         "message": "create post successfully."
     }, status=200)
 
+
 # this function will provide all posts in database.
 def get_posts(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed("Method not allowed.")
     
-    posts = Post.objects.all()
+    posts = Post.objects.order_by("-datetime").all()
 
     return JsonResponse({
-        "posts": posts
+        "posts": [post.serialize() for post in posts]
     }, status=200)

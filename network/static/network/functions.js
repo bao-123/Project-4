@@ -1,20 +1,24 @@
 const postURL = "/post"
+const getPostsURL = "/posts"
 
-export async function Post(content)
+export async function post(content)
 {
     try
     {
+        const csrfToken = getCSRFToken();
         const response = await fetch(postURL, {
             method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
             body: JSON.stringify({
                 content: content
             })
         });
         if(response.status === 200)
         {
-            return "success"
+            return "success";
         }
-        //create a function to display a message to user.
     }
     catch(error)
     {
@@ -31,4 +35,34 @@ export function displayMessage(message, type, divID)
 
     document.querySelector(`#${divID}`).appendChild(messageDiv);
 
+}
+
+export async function getPosts()
+{
+    try
+    {
+        const response = await fetch(getPostsURL);
+        console.log(response);
+        if(response.status !== 200)
+        {
+            console.error("Error while fetching data.");
+            return;
+        }
+
+        const data = await response.json();
+
+        return data.posts;
+    }
+    catch(error)
+    {
+        console.error(error);
+    }
+}
+
+//get csrf token so we can send some POST request.
+function getCSRFToken()
+{
+    const parts = document.cookie.split("csrftoken=");
+    console.log(parts);
+    return parts.length == 2 ? parts.pop().split(";").shift() : '';
 }

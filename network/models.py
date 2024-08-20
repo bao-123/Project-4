@@ -12,3 +12,9 @@ class Post(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0, validators=[MinValueValidator(0)]) # minimun value of this field is 0..
 
+    def __str__(self):
+        return f"""
+        User: {self.user.username}
+        {self.content}
+    {self.datetime}
+    likes: {self.likes}"""
