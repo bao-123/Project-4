@@ -3,6 +3,8 @@
 
 {% block script %}<script src="{% static 'network/index.js' %}" type="module" ></script>{% endblock %}
 {% block body %}
+
+    {% if user.is_authenticated %}
     <div id="messageDiv">
 
     </div>
@@ -10,26 +12,28 @@
     <div class="newPost">
         <form id="postForm">
             {% csrf_token %}
+    
             <textarea id="userPostContent" autocomplete="of" placeholder="Write your post's content here."></textarea>
             <button type="submit">Post</button>
         </form>
     </div>
+    {% endif %}
 
     <!-- Display posts here -->
      <div class="posts">
         {% for post in posts %}
             <div class="post">
                 <div class="postsContent">
-                <p class="postsUser"> {{ post.user.username }}</p>
+                <p class="postUser"> {{ post.user.username }}</p>
                 {% if user == post.user %}
                 <button class="editBtn">Edit</button>
                 {% endif %}
                 <p class="postContent">{{ post.content }}</p>
                 <p class="datetime"> {{ post.datetime }} </p>
-                </div>
+                </div> 
 
             <div class="postsBtn">
-                <button class="likeBtn"><!-- place an icon here --></button>
+                <button class="likeBtn">🤍</button>
                 <button class="commentBtn">Comment</button>
             </div>
 

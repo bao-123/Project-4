@@ -1,7 +1,8 @@
- import {post, displayMessage, getPosts} from "./functions.js";
+ import {post, displayMessage, getPosts, getUser} from "./functions.js";
 
  //constants
- const postsDisplay = document.querySelector("#posts");
+ const postsDisplay = document.querySelector(".posts");
+ const user = getUser();
 
 document.addEventListener("DOMContentLoaded", () => {
     const postForm = document.querySelector("#postForm");
@@ -19,18 +20,66 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
         .catch(error => console.error(error));
-        //fetch new data from database.
+        //loads posts from database.
         const newPosts = await getPosts();
+        //clear posts
+        postsDisplay.innerHTML = "";
 
-        for(let post of new_posts)
+        for(let post of newPosts)
         {
             const newPostDiv = document.createElement("div");
             const postContentDiv = document.createElement("div");
             const postButtonDiv = document.createElement("div");
 
-            //finish
-        }
+            newPostDiv.classList.add("post");
+            postContentDiv.classList.add("postsContent");
+            postButtonDiv.classList.add("postsBtn");
 
+            //finish
+            const postUser = document.createElement("p");
+            const postContentP = document.createElement("p");
+            const datetimeP = document.createElement("p");
+            const likeButton = document.createElement("button");
+            const commentButton = document.createElement("button");
+
+            //attributes
+            postUser.classList.add("postUser");
+            postUser.textContent = post.user.username;
+
+            postContentP.classList.add("postContent");
+            postContentP.textContent = post.content;
+
+            datetimeP.classList.add("datetime");
+            datetimeP.textContent = post.datetime;
+
+            likeButton.classList.add("likeBtn");
+            likeButton.textContent = "🤍";
+
+            commentButton.classList.add("commentBtn");
+            commentButton.textContent = "Comment";
+
+            postContentDiv.appendChild(postUser);
+            if(post.user.id == user.id)
+            {
+                const editButton = document.createElement("button");
+
+                editButton.classList.add("editBtn");
+                editButton.textContent = "Edit";
+
+                postContentDiv.appendChild(editButton);
+            }
+            postContentDiv.appendChild(postContentP);
+            postContentDiv.appendChild(datetimeP);
+
+            postButtonDiv.appendChild(likeButton);
+            postButtonDiv.appendChild(commentButton);
+
+            newPostDiv.appendChild(postContentDiv);
+            newPostDiv.appendChild(postButtonDiv);
+
+            //append to DOM.
+            postsDisplay.appendChild(newPostDiv);
+        }
     });
 
 });

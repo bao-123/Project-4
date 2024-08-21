@@ -3,14 +3,18 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 import json
 
 from .models import User, Post
 
 
 def index(request):
-    posts = Post.objects.all()
-    return render(request, "network/index.html")
+    posts = Post.objects.order_by("-datetime").all()
+    
+    return render(request, "network/index.html", {
+        "posts": posts
+    })
 
 
 def login_view(request):
@@ -66,6 +70,7 @@ def register(request):
 
 
 #function to post a new post.
+login_required(login_url="login")
 def post(request):
     if request.method == "GET":
         return HttpResponseNotAllowed("Method not allowed.")
@@ -89,5 +94,14 @@ def get_posts(request):
     posts = Post.objects.order_by("-datetime").all()
 
     return JsonResponse({
-        "posts": [post.serialize() for post in posts]
+        "posts": [post.to_dict() for post in posts]
+    }, status=200)
+
+#fix
+def get_user(request):
+    if request.method != "GET":
+        return HttpResponseNotAllowed("Method not allowed.")
+    
+    return JsonResponse({
+        "user": request.user.to_dict()
     }, status=200)

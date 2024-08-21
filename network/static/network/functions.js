@@ -1,5 +1,8 @@
-const postURL = "/post"
-const getPostsURL = "/posts"
+//contants
+const postURL = "/post";
+const getPostsURL = "/posts";
+const getUserURL = "/user";
+const messageDivId = "messageDiv";
 
 export async function post(content)
 {
@@ -42,10 +45,9 @@ export async function getPosts()
     try
     {
         const response = await fetch(getPostsURL);
-        console.log(response);
         if(response.status !== 200)
         {
-            console.error("Error while fetching data.");
+            displayMessage("Error while fetching data.", "danger", messageDivId);
             return;
         }
 
@@ -63,6 +65,25 @@ export async function getPosts()
 function getCSRFToken()
 {
     const parts = document.cookie.split("csrftoken=");
-    console.log(parts);
     return parts.length == 2 ? parts.pop().split(";").shift() : '';
+}
+
+// function to get user's information.
+export async function getUser()
+{
+    try
+    {
+        const response = await fetch(getUserURL);
+        if(response.status !== 200)
+        {
+            return "Error";
+        }
+        const data = await response.json();
+        
+        return data;
+    }
+    catch(error)
+    {
+        console.error(error);
+    }
 }

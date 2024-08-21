@@ -4,7 +4,13 @@ from django.core.validators import MinValueValidator
 
 
 class User(AbstractUser):
-    pass
+    
+    def to_dict(self) -> dict:
+        return {
+            "username": self.username,
+            "email": self.email,
+            "id": self.id
+        }
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
@@ -18,3 +24,26 @@ class Post(models.Model):
         {self.content}
     {self.datetime}
     likes: {self.likes}"""
+
+    def to_dict(self):
+        return {
+            "user": self.user.to_dict(),
+            "content": self.content,
+            "datetime": self.datetime,
+            "likes": self.likes
+        }
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
+    content = models.TextField()
+    likes = models.PositiveIntegerField(default=0)
+
+    def to_dict(self):
+        return {
+            "user": self.user,
+            "post": self.post,
+            "content": self.content
+        }
+    

@@ -1,0 +1,32 @@
+body
+{
+    margin: 0;
+}
+
+/* styles for the form that user use to write new post.*/
+.newPost
+{
+    margin: 40px;
+    padding: 40px;
+}
+
+#postForm
+{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
+}
+
+#userPostContent
+{
+    padding: 20px;
+    border: 1px solid #d3d3d3;
+    border-radius: 12px;
+    transition: 0.25s, 0.5s background-color ease-in-out;
+}
+
+#userPostContent:hover
+{
+    box-shadow: 12px 10px 12px #7c7a7a;
+}
+
