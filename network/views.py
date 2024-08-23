@@ -1,13 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import json
+from django.contrib.auth.models import AnonymousUser
 
 from .models import User, Post
 
+#TODO: create .github and some yaml files.
 
 def index(request):
     posts = Post.objects.order_by("-datetime").all()
@@ -76,6 +78,7 @@ def post(request):
         return HttpResponseNotAllowed("Method not allowed.")
     
     post_content = json.loads(request.body).get("content")
+
     if not post_content:
         return HttpResponseRedirect(reverse('index')) #we shouldn't let user create a empty post.
     
@@ -102,6 +105,9 @@ def get_user(request):
     if request.method != "GET":
         return HttpResponseNotAllowed("Method not allowed.")
     
-    return JsonResponse({
-        "user": request.user.to_dict()
-    }, status=200)
+    if request.user.__class__ is not AnonymousUser:
+        return JsonResponse({
+            "user": request.user.to_dict()
+        }, status=200)
+    
+    return HttpResponseRedirect(reverse("index"))
