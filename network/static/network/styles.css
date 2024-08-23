@@ -30,3 +30,30 @@ body
     box-shadow: 12px 10px 12px #7c7a7a;
 }
 
+#postForm > button
+{
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #66f2fc;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.25s, 0.5s background-color ease-in-out;
+    vertical-align: middle;
+}
+
+#postForm > button:hover
+{
+    background-color: #3af2ff;
+    width: 120px;
+    height: 50px;
+}
+
+#postForm > button:active
+{
+    background-color: #9ef1f7;
+    margin-top: 12px;
+}

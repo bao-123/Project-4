@@ -6,6 +6,12 @@ const messageDivId = "messageDiv";
 
 export async function post(content)
 {
+    if(content === "")
+    {
+        displayMessage("Can't post nothing!", "danger", messageDivId);
+        return;
+    }
+
     try
     {
         const csrfToken = getCSRFToken();
