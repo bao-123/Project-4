@@ -29,7 +29,7 @@ class Post(models.Model):
         return {
             "user": self.user.to_dict(),
             "content": self.content,
-            "datetime": self.datetime,
+            "datetime": self.datetime.strftime("%d/%m/%Y, %H:%M:%S"),
             "likes": self.likes
         }
 

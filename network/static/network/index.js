@@ -1,25 +1,32 @@
- import {post, displayMessage, getPosts, getUser} from "./functions.js";
+ import {post, displayMessage, getPosts, getUser,
+         heartUnlikedIcon, heartAnimation, messageDivId} from "./functions.js";
 
- //constants
- const postsDisplay = document.querySelector(".posts");
- const user = getUser();
+ //variables
+ let postsDisplay;
+ let user;
 
 document.addEventListener("DOMContentLoaded", () => {
+    postsDisplay = document.querySelector(".posts");
+    getUser()
+    .then(data => user = data)
+    .catch(error => console.error(error));
+
     const postForm = document.querySelector("#postForm");
 
-    postForm.addEventListener("submit", async function() {
+    postForm.addEventListener("submit", async function(event) {
+        
         event.preventDefault(); // keep the page from reload.
 
+        
+        try{
         const content = document.querySelector("#userPostContent").value;
         //post
-        post(content)
-        .then(response => {
-            if(response === "success")
-            {
-                displayMessage("Post successfully!", "success", "messageDiv");
-            }
-        })
-        .catch(error => console.error(error));
+        const response = await post(content);
+        if(response === "success")
+        {
+            displayMessage("Post successfully!", "success", messageDivId);
+        }
+
         //loads posts from database.
         const newPosts = await getPosts();
         //clear posts
@@ -53,7 +60,15 @@ document.addEventListener("DOMContentLoaded", () => {
             datetimeP.textContent = post.datetime;
 
             likeButton.classList.add("likeBtn");
-            likeButton.textContent = "🤍";
+            likeButton.innerHTML = heartUnlikedIcon;
+            // run animation (font awesome) when user hover on the heart icon.
+            likeButton.addEventListener("mouseover", event => {
+                console.log(event);
+                event.target.innerHTML = heartAnimation;
+            });
+            likeButton.addEventListener("mouseout", event => {
+                event.target.innerHTML = heartUnlikedIcon;
+            });
 
             commentButton.classList.add("commentBtn");
             commentButton.textContent = "Comment";
@@ -80,7 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
             //append to DOM.
             postsDisplay.appendChild(newPostDiv);
         }
-    });
+    }
+    catch(error)
+    {
+        displayMessage("Error while fetching new data.", "danger", messageDivId);
+        console.error(error);
+    }
+    }); 
 
 });
 

@@ -1,7 +1,10 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
-{% block script %}<script src="{% static 'network/index.js' %}" type="module" ></script>{% endblock %}
+{% block script %}
+<script src="{% static 'network/index.js' %}" type="module" ></script>
+{% endblock %}
+
 {% block body %}
 
     {% if user.is_authenticated %}
@@ -10,9 +13,8 @@
     </div>
     <!-- User will write new post here-->
     <div class="newPost">
+        <h3>New post</h3>
         <form id="postForm">
-            {% csrf_token %}
-    
             <textarea id="userPostContent" autocomplete="of" placeholder="Write your post's content here."></textarea>
             <button type="submit">Post</button>
         </form>
@@ -24,18 +26,20 @@
         {% for post in posts %}
             <div class="post">
                 <div class="postsContent">
-                <p class="postUser"> {{ post.user.username }}</p>
-                {% if user == post.user %}
-                <button class="editBtn">Edit</button>
-                {% endif %}
-                <p class="postContent">{{ post.content }}</p>
-                <p class="datetime"> {{ post.datetime }} </p>
+                    <p class="postUser"> {{ post.user.username }}</p>
+                    {% if user == post.user %}
+                    <button class="editBtn">Edit</button>
+                    {% endif %}
+                    <p class="postContent">{{ post.content }}</p>
+                    <p class="datetime"> {{ post.datetime }} </p>
                 </div> 
 
-            <div class="postsBtn">
-                <button class="likeBtn">🤍</button>
-                <button class="commentBtn">Comment</button>
-            </div>
+                <div class="postsBtn">
+                    <button class="likeBtn">
+                        <i class="fa-solid fa-heart-circle-plus fa-lg"></i>
+                    </button>
+                    <button class="commentBtn">Comment</button>
+                </div>
 
             </div>
         {% endfor %}

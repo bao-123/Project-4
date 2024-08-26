@@ -1,3 +1,41 @@
+/* keyframes */
+@keyframes appear
+{
+    0%
+    {
+        width: 0;
+        font-size: 0;
+    }
+    50%
+    {
+        width: 50%;
+        font-size: 16px;
+    }
+    100%
+    {
+        width: 100%;
+        font-size: 32px;
+    }
+}
+
+@keyframes disappear
+{
+    from 
+    {
+        opacity: 1;
+        height: 100%;
+        padding: 20px; /*20px is the padding of message div*/
+        font-size: 100%;
+    }
+    to
+    {
+        padding: 0;
+        opacity: 0;
+        height: 0;
+        font-size: 0;
+    }
+}
+
 body
 {
     margin: 0;
@@ -56,4 +94,125 @@ body
 {
     background-color: #9ef1f7;
     margin-top: 12px;
+}
+
+.posts
+{
+    display: flex;
+    flex-direction: column;
+    row-gap: 3rem;
+}
+
+.post
+{
+    border-bottom: 1px solid rgb(104, 103, 103);
+    padding: 10px;
+    background-color: #f1f1f1;
+    transition: 0.5s;
+}
+
+.post:hover
+{
+    box-shadow: 10px 12px 12px #d3d3d3;
+    margin-bottom: 5px;
+}
+
+.postUser
+{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.editBtn
+{
+    font-size: 12px;
+    border: none;
+    background-color: #cfa6a6;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.25s, 0.5s background-color ease-in-out;
+}
+
+.editBtn:hover
+{
+    background-color: #f0cccc;
+    padding: 14px;
+}
+
+
+.editBtn:active
+{
+    margin-top: 4px;
+    background-color: #fcdede;
+}
+
+.postContent
+{
+    margin-top: 10px;
+    margin-left: 0;
+    border-left: 2px solid rgb(95, 95, 95);
+    padding-left: 8px;
+}
+
+.datetime
+{
+    font-size: 12px;
+    color: rgb(70, 70, 70);
+}
+
+.postsBtn
+{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    justify-content: left;
+}
+
+.likeBtn
+{
+    width: fit-content;
+    margin-right: auto;
+    border: none;
+}
+
+.commentBtn
+{
+    width: fit-content;
+    border: none;
+    color: rgba(151, 151, 151, 0.671);
+    margin-right: auto;
+    margin-bottom: 10px;
+    transition: 0.5s;
+}
+
+
+.commentBtn:hover
+{
+    color: rgb(95, 94, 94); 
+}
+
+.message
+{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    animation: appear 2s ease-in;
+    margin-top: 10px;
+    border-radius: 20px;
+    font-family: Helvetica, sans-serif;
+}
+
+.danger
+{
+    background-color: rgba(253, 137, 137, 0.822);
+    border: 4px solid rgb(199, 0, 0);
+}
+
+.success
+{
+    background-color: rgba(149, 255, 99, 0.767);
+    border: 4px solid rgb(0, 165, 63);
 }

@@ -2,11 +2,16 @@
 const postURL = "/post";
 const getPostsURL = "/posts";
 const getUserURL = "/user";
-const messageDivId = "messageDiv";
+export const messageDivId = "messageDiv";
+
+const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check"></i>';
+export const heartUnlikedIcon = '<i class="fa-solid fa-heart-circle-plus"></i>';
+export const heartAnimation = '<i class="fa-solid fa-heart-circle-plus fa-beat-fade"></i>';
+
 
 export async function post(content)
 {
-    if(content === "")
+    if(content.trim() === "")
     {
         displayMessage("Can't post nothing!", "danger", messageDivId);
         return;
@@ -28,6 +33,10 @@ export async function post(content)
         {
             return "success";
         }
+        else
+        {
+            console.log("error");
+        }
     }
     catch(error)
     {
@@ -40,7 +49,19 @@ export function displayMessage(message, type, divID)
     const messageDiv = document.createElement("div");
 
     messageDiv.textContent = message;
+    messageDiv.classList.add("message");
     messageDiv.classList.add(type) // type is going to be 'danger', 'warning', 'success',...etc
+
+    messageDiv.addEventListener("animationend", event => {
+        if(event.animationName == "appear") // if the message just appear
+        {
+            event.target.style.animation = "disappear 2s ease-in"; // disappear the message
+        }
+        else //if the animation disappear just end.
+        {
+            event.target.style.display = "none"; 
+        }
+    });
 
     document.querySelector(`#${divID}`).appendChild(messageDiv);
 
@@ -92,4 +113,9 @@ export async function getUser()
     {
         console.error(error);
     }
+}
+
+export async function like(postId, likeBtn)
+{
+    
 }
