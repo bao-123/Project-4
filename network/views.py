@@ -79,7 +79,7 @@ def post(request):
         requested_post = Post.objects.get(pk=post_id)
 
         if not requested_post:
-            return HttpResponseNotFound(f"Not found any post with id is {request.GET["id"]}")
+            return HttpResponseNotFound(f"Not found any post with id is {request.GET['id']}")
         
         return JsonResponse({
             "post": requested_post.to_dict()
