@@ -11,6 +11,7 @@ from .models import User, Post
 
 #TODO: create .github and some yaml files.
 
+@login_required(login_url="login")
 def index(request):
     posts = Post.objects.order_by("-datetime").all()
     
@@ -98,8 +99,6 @@ def post(request):
         return JsonResponse({
             "message": "create post successfully."
         }, status=200)
-    elif request.method == "PUT":
-        pass
 
     else:
         return HttpResponseNotAllowed("Method not allowed.")
@@ -118,12 +117,56 @@ def get_posts(request):
 
 
 def get_user(request):
-    if request.method != "GET":
+    if request.method == "GET":
+        username = request.GET["username"]
+        if username == "":
+                return JsonResponse({
+                    "user": request.user.to_dict()
+                }, status=200)
+        else:
+            requested_user = User.objects.get(username=username) #username is unique
+            if not requested_user:
+                return JsonResponse({
+                    "message": "Error, doesn't found user with this id."
+                }, status=404)
+            
+            return JsonResponse({
+                "user": requested_user.to_dict()
+            }, status=200)
+        
+        return HttpResponseRedirect(reverse("index"))
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+        attribute = data.get("attribbute")
+
+        user = User.objects.get(pk=user_id)
+
+        if attribute == "follow":
+            request.user.follow(user)
+        elif attribute == "unfollow":
+            request.user.unfollow(user)
+        else:
+            return HttpResponseNotFound("attribute not found")
+
+    else:
         return HttpResponseNotAllowed("Method not allowed.")
     
-    if request.user.__class__ is User:
-        return JsonResponse({
-            "user": request.user.to_dict()
-        }, status=200)
+
+@login_required(login_url="login")
+def view_user(request, user_id: int):
+    if request.method != "GET":
+        return HttpResponseNotAllowed("method not allowed")
     
-    return HttpResponseRedirect(reverse("index"))
+    user = User.objects.get(pk=user_id)
+    user_posts = Post.objects.filter(user=user).order_by("-datetime").all()
+
+    return render(request, "network/user.html", {
+        "USER": {
+            "username": user.username,
+            "followers_count": user.followers.count(),
+            "following": user.following.count(),
+            "email": user.email,
+            "posts": user_posts
+        }
+    })

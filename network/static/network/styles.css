@@ -121,6 +121,14 @@ body
 {
     font-size: 18px;
     font-weight: 500;
+    color: rgb(34, 34, 34);
+    transition: 0.5s ease-in-out;
+}
+
+.postUser:hover
+{
+    font-weight: 700;
+    color: black;
 }
 
 .editBtn

@@ -1,0 +1,54 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block script %} <script src="network/profile.js" type="module"></script> {% endblock %}
+
+{% block title %} User: {{ USER.username }} {% endblock %}
+
+{% block body %}
+
+    <div id="messageDiv">
+
+    </div>
+    
+    <div class="user_profile">
+        <div class="user_info">
+            <h1>{{ USER.username }}</h1>
+            <h3>Email: {{ USER.email }}</h3>
+            <h3>Followers: {{ USER.followers_count }}</h3>
+            {% if user in USER.followers %}
+            <button class="unfollow">Unfollow</button>
+            {% else %}
+            <button class="follow">Follow</button>
+            {% endif %}
+            <h3>Following: {{ USER.following }}</h3>
+        </div>
+        <hr>
+        <h4>{{ USER.username }}'s posts</h4>
+        <hr>
+        <div class="posts">
+            {% for post in USER.posts %}
+            <div class="post">
+                <div class="postsContent">
+                    <a class="nav-link" href="{%url 'view_user' post.user.id %}"> <p class="postUser"> {{ post.user.username }}</p> </a>
+                    {% if user == post.user %}
+                    <button class="editBtn">Edit</button>
+                    {% endif %}
+                    <p class="postContent">{{ post.content }}</p>
+                    <p class="datetime"> {{ post.datetime }} </p>
+                </div> 
+
+                <div class="postsBtn">
+                    <button class="likeBtn">
+                        <i class="fa-solid fa-heart-circle-plus fa-lg"></i>
+                    </button>
+                    <button class="commentBtn">Comment</button>
+                </div>
+
+            </div>
+            {% empty %}
+            <h2>This user doesn't post anything</h2>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

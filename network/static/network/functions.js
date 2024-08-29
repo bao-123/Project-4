@@ -96,11 +96,11 @@ function getCSRFToken()
 }
 
 // function to get user's information.
-export async function getUser()
+export async function getUser(username='')
 {
     try
     {
-        const response = await fetch(getUserURL);
+        const response = await fetch(`${getUserURL}?username=${username}`)
         if(response.status !== 200)
         {
             return "Error";

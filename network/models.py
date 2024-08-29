@@ -5,6 +5,14 @@ from django.core.validators import MinValueValidator
 
 class User(AbstractUser):
     
+    following = models.ManyToManyField("User", blank=True, related_name="followers")
+    
+    def unfollow(self, user) -> None:
+        self.following.remove(user)
+
+    def follow(self, user) -> None:
+        self.following.add(user)
+
     def to_dict(self) -> dict:
         return {
             "username": self.username,
