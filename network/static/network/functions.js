@@ -1,7 +1,7 @@
 //contants
 const postURL = "/post";
 const getPostsURL = "/posts";
-const getUserURL = "/user";
+export const getUserURL = "/user";
 export const messageDivId = "messageDiv";
 
 const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check"></i>';
@@ -89,7 +89,7 @@ export async function getPosts()
 }
 
 //get csrf token so we can send some POST request.
-function getCSRFToken()
+export function getCSRFToken()
 {
     const parts = document.cookie.split("csrftoken=");
     return parts.length == 2 ? parts.pop().split(";").shift() : '';

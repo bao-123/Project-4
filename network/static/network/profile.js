@@ -1,23 +1,45 @@
-import {getUser, displayMessage } from "./functions.js"
+import {getUser, displayMessage, getUserURL, messageDivId, getCSRFToken } from "./functions.js"
 let user;
-document.addEventListener("DOMContentLoaded", () => {
-    const followBtn = document.querySelector(".user_info > button");
-    username = document.querySelector("user_info > h1").value; //username is unique
-    user = getUser(username);
+let username;
+document.addEventListener("DOMContentLoaded", async function() {
+    const csrfToken = getCSRFToken();
+    const followBtn = document.querySelector("#followBtn");
+    const followersDisplay = document.querySelector("#followers");
+
+    username = document.querySelector(".user_info > h1").innerHTML; //username is unique
+
+    // get information of the user that is show on the profile page.
+    const data = await getUser(username);
+    user = data.user;
 
     followBtn.addEventListener("click", async function() {
-        if(followBtn.innerHTML === "Follow")
+        if(followBtn.innerHTML !== "follow" && followBtn.innerHTML !== "unfollow")
         {
-            //follow user on profile page.
-            try 
-            {
-                
-            } catch (error) 
-            {
-                displayMessage("Error, please try again.", "danger", )
-                console.error(error);
-            }
-
+            return;
         }
-    })
+        const response = await fetch(getUserURL, {
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                id: user.id,
+                action: followBtn.innerHTML
+            })
+        });
+        let message = await response.json();
+        message = message.message;
+        if(response.status != 200)
+        {
+            displayMessage(message, "danger", messageDivId);
+            return;
+        }
+
+        displayMessage(message, "success", messageDivId);
+        followBtn.innerHTML = followBtn.innerHTML === "follow" ? "unfollow" : "follow";
+
+        //get user'new followers count.
+        const new_data = await getUser(username);
+        followersDisplay.innerHTML = `Followers: ${new_data.user.followers}`;
+    });
 });

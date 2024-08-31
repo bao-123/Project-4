@@ -8,16 +8,24 @@ class User(AbstractUser):
     following = models.ManyToManyField("User", blank=True, related_name="followers")
     
     def unfollow(self, user) -> None:
-        self.following.remove(user)
+        if self.following.contains(user):
+            self.following.remove(user)
+            return
+        raise Exception("Haven't follow")
 
     def follow(self, user) -> None:
-        self.following.add(user)
+        if not self.following.contains(user):
+            self.following.add(user)
+            return 
+        raise Exception("Already follow")
 
     def to_dict(self) -> dict:
         return {
+            "id": self.id,
             "username": self.username,
             "email": self.email,
-            "id": self.id
+            "followers": self.followers.count(),
+            "following": self.following.count()
         }
 
 class Post(models.Model):

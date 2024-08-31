@@ -3,6 +3,7 @@ from network.models import *
 from django.urls import reverse
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponseRedirect, JsonResponse
+import json
 
 
 # Create your tests here.
@@ -24,8 +25,10 @@ class TestCases(TestCase):
         Post.objects.create(user=user2, content="Post3")
 
     def test_index_view(self):
-        
+        self.client.login(username="user1", password="test1")
+
         response = self.client.get(reverse("index"))
+
         try:
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.context["posts"].count(), 3)
@@ -33,6 +36,8 @@ class TestCases(TestCase):
             print("Test index failed. ❌")
             print(e)
             return
+        finally:
+            self.client.logout()
 
         print("Test index finished. ✅")
 
@@ -115,7 +120,9 @@ class TestCases(TestCase):
         #login into user1
         self.client.force_login(user=user1)
 
-        response = self.client.get(reverse("get_user"))
+        response = self.client.get(reverse("get_user"), {
+            "username" : "" #username is '' because self.client is log in to user1, otherwise we'll need to provide user1's username.
+        })
 
         try:
             self.assertIs(response.__class__, JsonResponse)
@@ -130,7 +137,102 @@ class TestCases(TestCase):
             print("Test get user failed ❌")
             print(e.__str__())
             return
-        
+        finally:
+            self.client.logout()
+    
         print("Test get user data finished. ✅")
-        self.client.logout()
+    
+    def test_follow(self):
+        user1 = User.objects.get(username="user1")
+        user2 = User.objects.get(username="user2")
 
+        self.client.force_login(user=user1)
+
+        request_body = json.encoder.JSONEncoder().encode({"id": user2.id, "action": "follow"})
+
+        response = self.client.put(reverse("get_user"), request_body)
+
+        user2 = User.objects.get(username="user2")
+        try:
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(user2.followers.count(), 1)
+            self.assertTrue(user2.followers.contains(user1))
+            response = self.client.get(reverse("view_user", args=(user2.id,)))
+            self.assertEqual(response.context["USER"]["followers_count"], 1)
+
+        except Exception as e:
+            print("Test follow failed. ❌")
+            print(e.__str__())
+            return
+        finally:
+            self.client.logout()
+        print("Test follow finished. ✅")
+    
+    def test_unfollow(self):
+        user1 = User.objects.get(username="user1")
+        user2 = User.objects.get(username="user2")
+
+        self.client.force_login(user=user1)
+        user1.following.add(user2) #follow user2
+        before_unfollow = user2.followers.count()
+
+        request_body = json.encoder.JSONEncoder().encode({"id": user2.id, "action": "unfollow"})
+
+        response = self.client.put(reverse("get_user"), request_body)
+        user2 = User.objects.get(username="user2")
+
+        try:
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(user2.followers.count(), before_unfollow-1) #ensure that after unfollow user2's followers is descrease by 1.
+            self.assertFalse(user2.followers.contains(user1))
+        except Exception as e:
+            print("Test unfollow failed. ❌")
+            print(e.__str__())
+            return
+        finally:
+            self.client.logout()
+        
+        print("Test unfollow finished. ✅")
+    
+    def test_view_user(self):
+        user1 = User.objects.get(username="user1")
+        user2 = User.objects.get(username="user2")
+
+        user1.following.add(user2)
+        user2.following.add(user1)
+
+        self.client.force_login(user=user1)
+
+        response = self.client.get(reverse("view_user", args=(user1.id, )))
+
+        page_content = response.context["USER"]
+        try:
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(page_content["username"], user1.username)
+            self.assertEqual(page_content["email"], user1.email)
+            self.assertEqual(page_content["posts"].count(), user1.posts.count())
+            self.assertFalse(page_content["is_follower"]) #user1 can't follow himself so it should be False
+            self.assertEqual(page_content["following"], user1.following.count())
+            self.assertEqual(page_content["followers_count"], user1.followers.count())
+
+            #testing with user2
+            response = self.client.get(reverse("view_user", args=(user2.id, )))
+            page_content = response.context["USER"]
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(page_content["username"], user2.username)
+            self.assertEqual(page_content["email"], user2.email)
+            self.assertEqual(page_content["posts"].count(), user2.posts.count())
+            self.assertTrue(page_content["is_follower"]) #this should be True because user1 is a follower of user2
+            self.assertEqual(page_content["following"], user2.following.count())
+            self.assertEqual(page_content["followers_count"], user2.followers.count())
+
+
+        except Exception as e:
+            print("Test view user failed. ❌")
+            print(e)
+            return
+        finally:
+            self.client.logout()
+
+        print("Test view user finished. ✅")

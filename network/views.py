@@ -134,21 +134,34 @@ def get_user(request):
                 "user": requested_user.to_dict()
             }, status=200)
         
-        return HttpResponseRedirect(reverse("index"))
+    #TODO: fix
     elif request.method == "PUT":
         data = json.loads(request.body)
-        user_id = data.get("user_id")
-        attribute = data.get("attribbute")
+
+        user_id = data["id"]
+        action = data["action"]
 
         user = User.objects.get(pk=user_id)
-
-        if attribute == "follow":
-            request.user.follow(user)
-        elif attribute == "unfollow":
-            request.user.unfollow(user)
-        else:
-            return HttpResponseNotFound("attribute not found")
-
+        if request.user == user:
+            return JsonResponse({
+                "message": "Can't follow or unfollow yourself!"
+            }, status=400)
+        try:
+            if action == "follow":
+                request.user.follow(user)
+            elif action == "unfollow":
+                request.user.unfollow(user)
+            else:
+                return HttpResponseNotFound("action not allowed")
+        except Exception as e:
+            print(e)
+            return JsonResponse({
+                "message": "Error, please try again."
+            }, status=400)
+        
+        return JsonResponse({
+            "message": f"{action} successfully."
+        }, status=200)
     else:
         return HttpResponseNotAllowed("Method not allowed.")
     
@@ -165,6 +178,7 @@ def view_user(request, user_id: int):
         "USER": {
             "username": user.username,
             "followers_count": user.followers.count(),
+            "is_follower": user.followers.contains(request.user),
             "following": user.following.count(),
             "email": user.email,
             "posts": user_posts

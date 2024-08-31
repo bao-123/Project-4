@@ -1,7 +1,7 @@
 {% extends 'network/layout.html' %}
 {% load static %}
 
-{% block script %} <script src="network/profile.js" type="module"></script> {% endblock %}
+{% block script %} <script src="{% static 'network/profile.js' %}" type="module"></script> {% endblock %}
 
 {% block title %} User: {{ USER.username }} {% endblock %}
 
@@ -15,11 +15,11 @@
         <div class="user_info">
             <h1>{{ USER.username }}</h1>
             <h3>Email: {{ USER.email }}</h3>
-            <h3>Followers: {{ USER.followers_count }}</h3>
-            {% if user in USER.followers %}
-            <button class="unfollow">Unfollow</button>
+            <h3 id="followers">Followers: {{ USER.followers_count }}</h3>
+            {% if USER.is_follower %}
+            <button class="unfollow" id="followBtn">unfollow</button>
             {% else %}
-            <button class="follow">Follow</button>
+            <button class="follow" id="followBtn">follow</button>
             {% endif %}
             <h3>Following: {{ USER.following }}</h3>
         </div>
