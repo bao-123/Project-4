@@ -25,7 +25,7 @@ class User(AbstractUser):
             "username": self.username,
             "email": self.email,
             "followers": self.followers.count(),
-            "following": self.following.count()
+            "followings": self.following.count()
         }
 
 class Post(models.Model):
@@ -58,8 +58,8 @@ class Comment(models.Model):
 
     def to_dict(self):
         return {
-            "user": self.user,
-            "post": self.post,
+            "user": self.user.to_dict(),
+            "post": self.post.to_dict(),
             "content": self.content
         }
     

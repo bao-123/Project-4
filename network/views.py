@@ -184,3 +184,14 @@ def view_user(request, user_id: int):
             "posts": user_posts
         }
     })
+
+@login_required(login_url="login")
+def view_following(request):
+    if request.method != "GET":
+        return HttpResponseNotAllowed("method not allowed.")
+    
+    following_users = request.user.following.all()
+
+    return render(request, "network/following.html", {
+        "following_users": following_users
+    })

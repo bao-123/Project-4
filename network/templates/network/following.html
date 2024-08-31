@@ -1,0 +1,24 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block script %} <script src="{% static 'network/following.js' %}"></script> {% endblock %}
+{% block title %}Following{% endblock %}
+
+{% block body %}
+    <div class="following_users">
+    {% for user in following_users %}
+        <div class="userDiv">
+            <div class="userInfoDiv">
+            <p class="username">{{ user.username }}</p>
+            <p class="userEmail">{{ user.email }}</p>
+            <button class="details" data-id="{{ user.id }}">Details</button>
+            </div>
+            <div class="userFollowInfo">
+                <p class="userFollowers">{{ user.followers }}</p>
+                <p class="userFollowing"> {{ user.followings }}</p>
+                <button class="followBtn">Unfollow</button> <!--if the user is in the following page so we only can Unfollow-->
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
