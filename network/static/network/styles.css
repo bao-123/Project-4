@@ -128,6 +128,7 @@ body
     font-size: 18px;
     font-weight: 500;
     color: rgb(34, 34, 34);
+    margin-bottom: 0;
     transition: 0.5s ease-in-out;
 }
 
@@ -229,4 +230,106 @@ body
 {
     background-color: rgba(149, 255, 99, 0.767);
     border: 4px solid rgb(0, 165, 63);
+}
+
+.followBtn
+{
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.25s, 0.5s background-color ease-in-out;
+    max-width: 215px;
+    max-height: 45px;
+}
+
+.followBtn:hover
+{
+    box-shadow: 5px 5px 8px black;
+    padding: 12px;
+}
+
+.follow
+{
+    background-color: rgb(241, 64, 64);
+}
+
+
+.follow:hover
+{
+    background-color: rgb(243, 41, 41);
+}
+
+.unfollow
+{
+    background-color: rgb(16, 152, 231);
+}
+
+.unfollow:hover
+{
+    background-color: rgb(21, 90, 238);
+}
+
+.details
+{
+    border: none;
+    background-color: rgb(201, 198, 198);   
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.25s ease-out;
+    margin: 10px;
+}
+
+.details:hover
+{
+    background-color: rgb(207, 207, 207);
+}
+
+.details:active
+{
+    background-color: #fff;
+}
+
+.following_users
+{
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+}
+
+.userDiv
+{
+    border: 1px solid rgb(177, 177, 177);
+    background-color: rgba(236, 236, 236, 0.747);
+    margin: 4px;
+    padding: 2px;
+}
+
+.userEmail
+{
+    color: grey;
+    font-size: 200;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.userInfoDiv
+{
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+
+.userFollowers
+{
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.userFollowings
+{
+    font-weight: 700;
+    font-size: 14px;
 }

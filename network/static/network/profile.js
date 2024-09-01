@@ -36,7 +36,18 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
 
         displayMessage(message, "success", messageDivId);
-        followBtn.innerHTML = followBtn.innerHTML === "follow" ? "unfollow" : "follow";
+        if(followBtn.innerHTML === "follow")
+        {
+            followBtn.innerHTML = "unfollow";
+            followBtn.classList.remove("follow");
+            followBtn.classList.add("unfollow");
+        }
+        else
+        {
+            followBtn.innerHTML = "follow";
+            followBtn.classList.remove("unfollow");
+            followBtn.classList.add("follow");
+        }
 
         //get user'new followers count.
         const new_data = await getUser(username);

@@ -17,9 +17,9 @@
             <h3>Email: {{ USER.email }}</h3>
             <h3 id="followers">Followers: {{ USER.followers_count }}</h3>
             {% if USER.is_follower %}
-            <button class="unfollow" id="followBtn">unfollow</button>
+            <button  id="followBtn" class="followBtn unfollow">unfollow</button>
             {% else %}
-            <button class="follow" id="followBtn">follow</button>
+            <button id="followBtn" class="followBtn follow">follow</button>
             {% endif %}
             <h3>Following: {{ USER.following }}</h3>
         </div>

@@ -9,16 +9,22 @@
     {% for user in following_users %}
         <div class="userDiv">
             <div class="userInfoDiv">
-            <p class="username">{{ user.username }}</p>
-            <p class="userEmail">{{ user.email }}</p>
-            <button class="details" data-id="{{ user.id }}">Details</button>
+                <div>
+                    <a class="nav-link" href="{% url 'view_user' user.id %}"><p class="postUser">{{ user.username }}</p> </a>
+                    <p class="userEmail">{{ user.email }}</p>
+                </div>
+                <button class="details" data-id="{{ user.id }}">Details</button>
             </div>
-            <div class="userFollowInfo">
-                <p class="userFollowers">{{ user.followers }}</p>
-                <p class="userFollowing"> {{ user.followings }}</p>
-                <button class="followBtn">Unfollow</button> <!--if the user is in the following page so we only can Unfollow-->
+            <div class="userInfoDiv">
+                <div>
+                    <p class="userFollowers">Followers: {{ user.followers }}</p>
+                    <p class="userFollowings"> Followings: {{ user.followings }}</p>
+                </div>
+                <button class="followBtn unfollow">Unfollow</button> <!--if the user is in the following page so we only can Unfollow-->
             </div>
         </div>
+    {% empty %}
+    <h3>You're not following anyone!</h3>
     {% endfor %}
     </div>
 {% endblock %}
