@@ -1,12 +1,13 @@
 //contants
 const postURL = "/post";
 const getPostsURL = "/posts";
+const likePostURL = "/like";
 export const getUserURL = "/user";
 export const messageDivId = "messageDiv";
 
-const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check"></i>';
-export const heartUnlikedIcon = '<i class="fa-solid fa-heart-circle-plus"></i>';
-export const heartAnimation = '<i class="fa-solid fa-heart-circle-plus fa-beat-fade"></i>';
+export const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check fa-lg"></i>';
+export const heartUnlikedIcon = '<i class="fa-solid fa-heart-circle-plus fa-lg"></i>';
+export const heartAnimation = '<i class="fa-solid fa-heart-circle-plus fa-beat-fade fa-lg"></i>';
 
 
 export async function post(content)
@@ -115,7 +116,26 @@ export async function getUser(username='')
     }
 }
 
-export async function like(postId, likeBtn)
+export async function like(postId, action)
 {
-    
+    try
+    {
+        const response = await fetch(likePostURL, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({
+                post_id: postId,
+                action: action
+            })
+        });
+
+        return {status: response.status, message: (await response.json()).message}
+    } 
+    catch(error)
+    {
+        displayMessage("Failed to like this post.", "danger", messageDivId);
+        console.error(error);
+    }   
 }

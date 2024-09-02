@@ -13,7 +13,9 @@ from .models import User, Post
 
 @login_required(login_url="login")
 def index(request):
-    posts = Post.objects.order_by("-datetime").all()
+
+    posts = [post.to_dict(user=request.user) for post in Post.objects.order_by("-datetime").all()]
+
     
     return render(request, "network/index.html", {
         "posts": posts
@@ -112,7 +114,7 @@ def get_posts(request):
     posts = Post.objects.order_by("-datetime").all()
 
     return JsonResponse({
-        "posts": [post.to_dict() for post in posts]
+        "posts": [post.to_dict(user=request.user) for post in posts]
     }, status=200)
 
 
@@ -196,3 +198,35 @@ def view_following(request):
     return render(request, "network/following.html", {
         "following_users": following_users
     })
+
+@login_required(login_url="login")
+def like(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed("method not allowed")
+    
+    data = json.loads(request.body)
+    post_id = data["post_id"]
+    action = data["action"]
+
+    try:
+        POST = Post.objects.get(pk=post_id)
+
+        if action == "like":
+            POST.like(request.user)
+        elif action == "unlike":
+            POST.unlike(request.user)
+        else:
+            return JsonResponse({
+                "message": "Unknow action."
+            }, status=400)
+
+        return JsonResponse({
+            "message": "like successfully"
+        }, status=200)
+    
+    except Exception as e:
+        print(e)
+        return JsonResponse({
+            "message": f"Failed to {action}."
+        }, status=400)
+    

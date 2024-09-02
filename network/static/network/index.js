@@ -1,5 +1,6 @@
  import {post, displayMessage, getPosts, getUser,
-         heartUnlikedIcon, heartAnimation, messageDivId} from "./functions.js";
+         heartUnlikedIcon, heartAnimation, messageDivId,
+        heartLikedIcon, like} from "./functions.js";
 
  //variables
  let postsDisplay;
@@ -8,7 +9,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     postsDisplay = document.querySelector(".posts");
     getUser()
-    .then(data => user = data)
+    .then(data => user = data.user)
     .catch(error => console.error(error));
 
     const postForm = document.querySelector("#postForm");
@@ -60,21 +61,48 @@ document.addEventListener("DOMContentLoaded", () => {
             datetimeP.textContent = post.datetime;
 
             likeButton.classList.add("likeBtn");
-            likeButton.innerHTML = heartUnlikedIcon;
-            // run animation (font awesome) when user hover on the heart icon.
-            likeButton.addEventListener("mouseover", event => {
-                console.log(event);
-                event.target.innerHTML = heartAnimation;
-            });
-            likeButton.addEventListener("mouseout", event => {
-                event.target.innerHTML = heartUnlikedIcon;
-            });
+            if(post.is_liked)
+            {
+                likeButton.innerHTML = heartLikedIcon;
+            }
+            else
+            {
 
+                likeButton.innerHTML = heartUnlikedIcon;
+                // run animation (font awesome) when user hover on the heart icon.
+                likeButton.addEventListener("mouseenter", () => {
+                    if(likeButton.innerHTML != heartLikedIcon)
+                    {
+                        likeButton.innerHTML = heartAnimation;
+                    }
+                });
+                likeButton.addEventListener("mouseleave", () => {
+                    if(likeButton.innerHTML != heartLikedIcon)
+                    {
+                        likeButton.innerHTML = heartUnlikedIcon;
+                    }
+                });
+                likeButton.onclick = () => {
+                    const action = likeButton.innerHTML == heartLikedIcon ? "unlike" : "like";
+                    like(post.id, action)
+                    .then(response => {
+                        if(response.status !== 200)
+                        {
+                            displayMessage(response.message, "danger", "likeMessageDiv");
+                            return;
+                        }
+                        displayMessage(response.message, "success", "likeMessageDiv");
+                        likeButton.innerHTML = heartLikedIcon;
+                    })
+                    .catch(error => console.error(error));
+                };
+                }
+            }
             commentButton.classList.add("commentBtn");
             commentButton.textContent = "Comment";
 
             postContentDiv.appendChild(postUser);
-            if(post.user.id == user.id)
+            if(post.user.id === user.id)
             {
                 const editButton = document.createElement("button");
 
@@ -104,4 +132,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }); 
 
 });
-

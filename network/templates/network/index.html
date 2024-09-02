@@ -26,18 +26,28 @@
         {% for post in posts %}
             <div class="post">
                 <div class="postsContent">
-                    <a  class="nav-link" href="{% url 'view_user' post.user.id %}"> <p class="postUser">{{ post.user.username }} </p></a>
-                    {% if user == post.user %}
+                    <a  class="nav-link" href="{% url 'view_user' post.user.id %}"> <p class="postUser">{{ post.user.username }}</p></a>
+
+                    <!-- fix here -->
+                    {% if user.id == post.user.id %}
                     <button class="editBtn">Edit</button>
                     {% endif %}
+
                     <p class="postContent">{{ post.content }}</p>
                     <p class="datetime"> {{ post.datetime }} </p>
                 </div> 
 
                 <div class="postsBtn">
-                    <button class="likeBtn">
-                        <i class="fa-solid fa-heart-circle-plus fa-lg"></i>
-                    </button>
+                    <div>
+                        <button class="likeBtn">
+                            {% if post.is_liked %} <!-- Check if user is liked the post or not -->
+                            <i class="fa-solid fa-heart-circle-check fa-lg"> {{ post.likes }}</i>
+                            {% else %}
+                            <i class="fa-solid fa-heart-circle-plus fa-lg"> {{ post.likes }}</i>
+                            {% endif %}
+                        </button>
+                        <div class="likeMessage"></div>
+                    </div>
                     <button class="commentBtn">Comment</button>
                 </div>
 

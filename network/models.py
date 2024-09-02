@@ -32,21 +32,37 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     content = models.TextField()
     datetime = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0, validators=[MinValueValidator(0)]) # minimun value of this field is 0..
+    likes = models.ManyToManyField(User, blank=True, related_name="posts_liked") # minimun value of this field is 0..
 
     def __str__(self):
         return f"""
         User: {self.user.username}
         {self.content}
-    {self.datetime}
-    likes: {self.likes}"""
+        {self.datetime}
+        likes: {self.likes}"""
+    
+    def get_likes(self) -> int:
+        return self.likes.count()
+    
+    def like(self, user: User) -> None:
+        if not self.likes.contains(self):
+            self.likes.add(user)
+            return
+        raise Exception("User Already like this post")
+    
+    def unlike(self, user: User) -> None:
+        if self.likes.contains(user):
+            self.likes.remove(user)
+            return
+        raise Exception("User doesn't like this post.")
 
-    def to_dict(self):
+    def to_dict(self, user=None):
         return {
             "user": self.user.to_dict(),
             "content": self.content,
             "datetime": self.datetime.strftime("%d/%m/%Y, %H:%M:%S"),
-            "likes": self.likes
+            "likes": self.get_likes(),
+            "is_liked": self.likes.contains(user) if user else False
         }
 
 
