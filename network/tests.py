@@ -31,7 +31,7 @@ class TestCases(TestCase):
 
         try:
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.context["posts"].count(), 3)
+            self.assertEqual(len(response.context["posts"]), 3)
         except Exception as e:
             print("Test index failed. ❌")
             print(e)
@@ -51,7 +51,7 @@ class TestCases(TestCase):
         try:
             self.assertEqual(response.status_code, 200)
             self.assertEqual(index_response.status_code, 200)
-            self.assertEqual(index_response.context["posts"].count(), 4)
+            self.assertEqual(len(index_response.context["posts"]), 4)
         except Exception as e:
             print("Test post failed. ❌")
             print("Exception: ")
@@ -100,7 +100,7 @@ class TestCases(TestCase):
         print("Logout test finished. ✅")
     
     def test_get_posts(self):
-
+        self.client.login(username="user1", password="test1")
         response = self.client.get(reverse("get_posts_data"))
         data = response.json()
         try:
