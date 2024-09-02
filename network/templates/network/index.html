@@ -41,9 +41,9 @@
                     <div>
                         <button class="likeBtn">
                             {% if post.is_liked %} <!-- Check if user is liked the post or not -->
-                            <i class="fa-solid fa-heart-circle-check fa-lg"> {{ post.likes }}</i>
+                            <i class="fa-solid fa-heart-circle-check fa-lg"></i>{{ post.likes }}
                             {% else %}
-                            <i class="fa-solid fa-heart-circle-plus fa-lg"> {{ post.likes }}</i>
+                            <i class="fa-solid fa-heart-circle-plus fa-lg"></i> {{ post.likes }}
                             {% endif %}
                         </button>
                     </div>

@@ -1,12 +1,15 @@
  import {post, displayMessage, getPosts, getUser,
          heartUnlikedIcon, heartAnimation, messageDivId,
-        heartLikedIcon, like} from "./functions.js";
+        heartLikedIcon, like, heartLikedClass, heartAnimationClass} from "./functions.js";
 
  //variables
  let postsDisplay;
  let user;
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    //document.querySelectorAll()
+
     postsDisplay = document.querySelector(".posts");
     getUser()
     .then(data => user = data.user)
@@ -64,31 +67,30 @@ document.addEventListener("DOMContentLoaded", () => {
             likeButton.classList.add("likeBtn");
             if(post.is_liked)
             {
-                likeButton.innerHTML = heartLikedIcon;
+                likeButton.innerHTML = heartLikedIcon + post.likes;
             }
             else
             {
 
-                likeButton.innerHTML = heartUnlikedIcon;
+                likeButton.innerHTML = heartUnlikedIcon + post.likes;
                 // run animation (font awesome) when user hover on the heart icon.
                 likeButton.addEventListener("mouseenter", () => {
-                    if(likeButton.innerHTML != heartLikedIcon)
+                    if(!likeButton.firstElementChild.classList.contains(heartLikedClass))
                     {
-                        likeButton.innerHTML = heartAnimation;
+                        likeButton.firstChild.classList.add(heartAnimationClass);
                     }
                 });
                 likeButton.addEventListener("mouseleave", () => {
-                    if(likeButton.innerHTML != heartLikedIcon)
+                    if(likeButton.firstElementChild.classList.contains(heartAnimationClass))
                     {
-                        likeButton.innerHTML = heartUnlikedIcon;
+                        likeButton.firstElementChild.classList.remove(heartAnimationClass);
                     }
                 });
             }
             
             likeButton.onclick = () => {
-                const action = likeButton.innerHTML === heartLikedIcon ? "unlike" : "like";
-                console.log(action);
-                console.log(post.id);
+
+                const action = likeButton.firstElementChild.classList.contains(heartLikedClass) ? "unlike" : "like";
                 like(post.id, action)
                 .then(response => {
                     if(response.status === 200)

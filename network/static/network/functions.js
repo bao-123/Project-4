@@ -8,6 +8,9 @@ export const messageDivId = "messageDiv";
 export const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check fa-lg"></i>';
 export const heartUnlikedIcon = '<i class="fa-solid fa-heart-circle-plus fa-lg"></i>';
 export const heartAnimation = '<i class="fa-solid fa-heart-circle-plus fa-beat-fade fa-lg"></i>';
+export const heartLikedClass = "fa-heart-circle-check";
+export const heartUnlikedClass = "fa-heart-circle-plus";
+export const heartAnimationClass = "fa-beat-fade";
 
 
 export async function post(content)
