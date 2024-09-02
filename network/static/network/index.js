@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault(); // keep the page from reload.
 
         
-        try{
+        try
+        {
         const content = document.querySelector("#userPostContent").value;
         //post
         const response = await post(content);
@@ -82,22 +83,22 @@ document.addEventListener("DOMContentLoaded", () => {
                         likeButton.innerHTML = heartUnlikedIcon;
                     }
                 });
-                likeButton.onclick = () => {
-                    const action = likeButton.innerHTML == heartLikedIcon ? "unlike" : "like";
-                    like(post.id, action)
-                    .then(response => {
-                        if(response.status !== 200)
-                        {
-                            displayMessage(response.message, "danger", "likeMessageDiv");
-                            return;
-                        }
-                        displayMessage(response.message, "success", "likeMessageDiv");
-                        likeButton.innerHTML = heartLikedIcon;
-                    })
-                    .catch(error => console.error(error));
-                };
-                }
             }
+            
+            likeButton.onclick = () => {
+                const action = likeButton.innerHTML === heartLikedIcon ? "unlike" : "like";
+                console.log(action);
+                console.log(post.id);
+                like(post.id, action)
+                .then(response => {
+                    if(response.status === 200)
+                    {
+                        likeButton.innerHTML = action === "unlike" ? heartUnlikedIcon : heartLikedIcon;
+                    }
+                })
+                .catch(error => console.error(error));
+            };
+            
             commentButton.classList.add("commentBtn");
             commentButton.textContent = "Comment";
 

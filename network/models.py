@@ -58,6 +58,7 @@ class Post(models.Model):
 
     def to_dict(self, user=None):
         return {
+            "id": self.id,
             "user": self.user.to_dict(),
             "content": self.content,
             "datetime": self.datetime.strftime("%d/%m/%Y, %H:%M:%S"),

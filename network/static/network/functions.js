@@ -135,7 +135,6 @@ export async function like(postId, action)
     } 
     catch(error)
     {
-        displayMessage("Failed to like this post.", "danger", messageDivId);
         console.error(error);
     }   
 }
