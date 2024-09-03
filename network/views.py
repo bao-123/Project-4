@@ -214,7 +214,7 @@ def comment(request):
             }, status=400)
 
         try:
-            post = Post.objects.get(pk=post-id)
+            post = Post.objects.get(pk=post_id)
 
             Comment.objects.create(user=request.user, post=post, content=content)
 
@@ -227,14 +227,9 @@ def comment(request):
                 "message": "Error"
             }, status=400)
     elif request.method == "GET":
-        comment_id = request.GET["comment_id"]
-        try:
-            comment = Comment.objects.get(pk=comment_id)
+        comments = [comment.to_dict() for comment in Comment.objects.all()]
 
-            return JsonResponse(comment.to_dict(), status=200)
-        except:
-            return JsonResponse({"message" : "Error"}, status=400)
-
+        return JsonResponse(comments, status=200)
     else:
         return HttpResponseNotAllowed("method not allowed")
         

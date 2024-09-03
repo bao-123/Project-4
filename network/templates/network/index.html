@@ -37,7 +37,7 @@
                     <p class="datetime"> {{ post.datetime }} </p>
                 </div> 
 
-                <div class="postsBtn">
+                <div class="postsBtn" data-post_id="{{ post.id }}">
                     <div class="likesInfo">
                         <button class="likeBtn" data-post_id="{{ post.id }}"> <!-- Data-id of this button is the post's id-->
                             {% if post.is_liked %} <!-- Check if user is liked the post or not -->

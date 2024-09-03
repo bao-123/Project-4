@@ -2,8 +2,10 @@
 const postURL = "/post";
 const getPostsURL = "/posts";
 const likePostURL = "/like";
+const commentURL = "/comment";
 export const getUserURL = "/user";
 export const messageDivId = "messageDiv";
+
 
 export const heartLikedIcon = '<i class="fa-solid fa-heart-circle-check fa-lg"></i>';
 export const heartUnlikedIcon = '<i class="fa-solid fa-heart-circle-plus fa-lg"></i>';
@@ -158,5 +160,30 @@ export async function getLikes(postId)
     } catch (error) 
     {
         console.error(error);   
+    }
+}
+
+export async function comment(postId, content) 
+{
+    try 
+    {
+        const response = await fetch(commentURL, {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({
+                post_id: postId,
+                content: content
+            })
+        });
+        if(response.status !== 200)
+        {
+            throw new Error("Failed to post comment");
+        }
+        return {status: response.status, message: (await response.json).message};
+    } catch (error) 
+    {
+        console.error(error);    
     }
 }

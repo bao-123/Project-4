@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("mouseleave", likeBtnAnimation);
         button.onclick = () => {
             const action = button.firstElementChild.classList.contains(heartLikedClass) ? "unlike" : "like";
-            const postId = button.dataset.post_id;
+            const postId = Number(button.dataset.post_id);
             like(postId, action)
             .then(response => {
                 if(response.status === 200)
