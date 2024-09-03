@@ -1,7 +1,8 @@
  import {post, displayMessage, getPosts, getUser,
          heartUnlikedIcon, heartAnimation, messageDivId,
         heartLikedIcon, like, heartLikedClass, heartAnimationClass,
-        heartUnlikedClass} from "./functions.js";
+        heartUnlikedClass,
+        getLikes} from "./functions.js";
 
  //variables
  let postsDisplay;
@@ -15,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         button.onclick = () => {
             const action = button.firstElementChild.classList.contains(heartLikedClass) ? "unlike" : "like";
             const postId = button.dataset.post_id;
-            console.log(postId);
             like(postId, action)
             .then(response => {
                 if(response.status === 200)
@@ -25,8 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     button.firstElementChild.classList.toggle(heartUnlikedClass);
                 }
             })
-            .catch(error => console.error(error));
-
+            .then(() => { //we have to put in our function into a "then" method, otherwise. the our "getLikes" function will be executed before the like function so it won't display the latest data.
+                getLikes(postId)
+                .then(likes => {
+                    button.nextElementSibling.textContent = likes;
+                })
+                .catch(error => console.error(error));
+                }
+        ).catch(error => console.error(error));
         };
     });
 
@@ -123,7 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         likeButton.innerHTML = action === "unlike" ? heartUnlikedIcon : heartLikedIcon;
                     }
                 })
-                .catch(error => console.error(error));
+                .then(() => {
+                    getLikes(post.id)
+                    .then(likes => {
+                        likeButton.nextElementSibling.textContent = likes;
+                    })
+                    .catch(error => console.error(error));
+                    }
+                ).catch(error => console.error(error));
             };
             
             commentButton.classList.add("commentBtn");

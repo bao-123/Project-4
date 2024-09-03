@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.core.validators import MinValueValidator
 
 
 class User(AbstractUser):
@@ -44,6 +43,9 @@ class Post(models.Model):
     def get_likes(self) -> int:
         return self.likes.count()
     
+    def get_comments(self) -> list:
+        return [comment.to_dict() for comment in self.comments.all()]
+    
     def like(self, user: User) -> None:
         if not self.likes.contains(self):
             self.likes.add(user)
@@ -69,9 +71,10 @@ class Post(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()
     likes = models.ManyToManyField(User, blank=True, related_name="comment_likes")
+    datetime = models.DateTimeField(auto_now_add=True)
 
     def get_likes(self):
         return self.likes.count()
@@ -83,6 +86,7 @@ class Comment(models.Model):
         return {
             "user": self.user.to_dict(),
             "post": self.post.to_dict(),
-            "content": self.content
+            "content": self.content,
+            "datetime": self.datetime.strftime("%d/%M/%Y, %H/%M/%S")
         }
     

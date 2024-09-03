@@ -202,33 +202,42 @@ def view_following(request):
 
 @login_required(login_url="login")
 def comment(request):
-    if request.method != "POST":
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        post_id: int = data["post_id"]
+        content: str = data["content"]
+
+        if not content:
+            return JsonResponse({
+                "message": "Can't comment nothing!"
+            }, status=400)
+
+        try:
+            post = Post.objects.get(pk=post-id)
+
+            Comment.objects.create(user=request.user, post=post, content=content)
+
+            return JsonResponse({
+                "message": "Comment successfully"
+            }, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({
+                "message": "Error"
+            }, status=400)
+    elif request.method == "GET":
+        comment_id = request.GET["comment_id"]
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+
+            return JsonResponse(comment.to_dict(), status=200)
+        except:
+            return JsonResponse({"message" : "Error"}, status=400)
+
+    else:
         return HttpResponseNotAllowed("method not allowed")
-    
-    data = json.loads(request.body)
-
-    post_id: int = data["post_id"]
-    content: str = data["content"]
-
-    if not content:
-        return JsonResponse({
-            "message": "Can't comment nothing!"
-        }, status=400)
-
-    try:
-        post = Post.objects.get(pk=post-id)
-
-        Comment.objects.create(user=request.user, post=post, content=content)
-
-        return JsonResponse({
-            "message": "Comment successfully"
-        }, status=200)
-    except Exception as e:
-        print(e)
-        return JsonResponse({
-            "message": "Error"
-        }, status=400)
-    
+        
 @login_required(login_url="login")
 def like(request):
     if request.method == "POST":
@@ -258,7 +267,7 @@ def like(request):
                 "message": f"Failed to {action}."
             }, status=400)
     elif request.method == "GET":
-        post_id = data.GET["post_id"]
+        post_id = request.GET["post_id"]
         try:
             post = Post.objects.get(pk=post_id)
 

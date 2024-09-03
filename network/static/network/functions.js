@@ -48,13 +48,14 @@ export async function post(content)
     }
 }
 
-export function displayMessage(message, type, divID)
+export function displayMessage(message, type, divID, size="lg")
 {
     const messageDiv = document.createElement("div");
 
     messageDiv.textContent = message;
     messageDiv.classList.add("message");
-    messageDiv.classList.add(type) // type is going to be 'danger', 'warning', 'success',...etc
+    messageDiv.classList.add(size);
+    messageDiv.classList.add(type); // type is going to be 'danger', 'warning', 'success',...etc
 
     messageDiv.addEventListener("animationend", event => {
         if(event.animationName == "appear") // if the message just appear
