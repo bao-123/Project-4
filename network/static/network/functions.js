@@ -141,3 +141,21 @@ export async function like(postId, action)
         console.error(error);
     }   
 }
+
+
+export async function getLikes(postId)
+{
+    try 
+    {
+        const response = await fetch(`${likePostURL}?post_id=${postId}`);
+        if(response.status !== 200)
+        {
+            throw new Error("Failed to get likes");
+        }
+        return (await response.json()).likes;
+
+    } catch (error) 
+    {
+        console.error(error);   
+    }
+}

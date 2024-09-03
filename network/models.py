@@ -68,10 +68,16 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comments")
     content = models.TextField()
-    likes = models.PositiveIntegerField(default=0)
+    likes = models.ManyToManyField(User, blank=True, related_name="comment_likes")
+
+    def get_likes(self):
+        return self.likes.count()
+    
+    def edit(self, new_content: str):
+        self.content = new_content
 
     def to_dict(self):
         return {

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.contrib.auth.models import AnonymousUser
 
-from .models import User, Post
+from .models import *
 
 #TODO: create .github and some yaml files.
 
@@ -199,34 +199,76 @@ def view_following(request):
         "following_users": following_users
     })
 
+
 @login_required(login_url="login")
-def like(request):
+def comment(request):
     if request.method != "POST":
         return HttpResponseNotAllowed("method not allowed")
     
     data = json.loads(request.body)
-    post_id = data["post_id"]
-    action = data["action"]
+
+    post_id: int = data["post_id"]
+    content: str = data["content"]
+
+    if not content:
+        return JsonResponse({
+            "message": "Can't comment nothing!"
+        }, status=400)
 
     try:
-        POST = Post.objects.get(pk=post_id)
+        post = Post.objects.get(pk=post-id)
 
-        if action == "like":
-            POST.like(request.user)
-        elif action == "unlike":
-            POST.unlike(request.user)
-        else:
-            return JsonResponse({
-                "message": "Unknow action."
-            }, status=400)
+        Comment.objects.create(user=request.user, post=post, content=content)
 
         return JsonResponse({
-            "message": "like successfully"
+            "message": "Comment successfully"
         }, status=200)
-    
     except Exception as e:
         print(e)
         return JsonResponse({
-            "message": f"Failed to {action}."
+            "message": "Error"
         }, status=400)
+    
+@login_required(login_url="login")
+def like(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        post_id = data["post_id"]
+        action = data["action"]
+
+        try:
+            POST = Post.objects.get(pk=post_id)
+
+            if action == "like":
+                POST.like(request.user)
+            elif action == "unlike":
+                POST.unlike(request.user)
+            else:
+                return JsonResponse({
+                    "message": "Unknow action."
+                }, status=400)
+
+            return JsonResponse({
+                "message": "like successfully"
+            }, status=200)
+        
+        except Exception as e:
+            print(e)
+            return JsonResponse({
+                "message": f"Failed to {action}."
+            }, status=400)
+    elif request.method == "GET":
+        post_id = data.GET["post_id"]
+        try:
+            post = Post.objects.get(pk=post_id)
+
+            return JsonResponse({
+                "likes": post.get_likes()
+            }, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"Can't found any post with this id"}, status=404)
+        
+    else:
+        return HttpResponseNotAllowed("method not allowed")
     

@@ -186,8 +186,8 @@ body
 .likeBtn
 {
     width: fit-content;
-    margin-right: auto;
     border: none;
+    padding: 4px;
 }
 
 .commentBtn
@@ -332,4 +332,21 @@ body
 {
     font-weight: 700;
     font-size: 14px;
+}
+
+.likesDisplay
+{
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    height: fit-content;
+}
+
+.likesInfo
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    margin-right: auto;
+    align-items: baseline;
 }

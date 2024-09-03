@@ -1,6 +1,7 @@
  import {post, displayMessage, getPosts, getUser,
          heartUnlikedIcon, heartAnimation, messageDivId,
-        heartLikedIcon, like, heartLikedClass, heartAnimationClass} from "./functions.js";
+        heartLikedIcon, like, heartLikedClass, heartAnimationClass,
+        heartUnlikedClass} from "./functions.js";
 
  //variables
  let postsDisplay;
@@ -8,7 +9,26 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    //document.querySelectorAll()
+    document.querySelectorAll(".likeBtn").forEach(button => {
+        button.addEventListener("mouseenter", likeBtnAnimation);
+        button.addEventListener("mouseleave", likeBtnAnimation);
+        button.onclick = () => {
+            const action = button.firstElementChild.classList.contains(heartLikedClass) ? "unlike" : "like";
+            const postId = button.dataset.post_id;
+            console.log(postId);
+            like(postId, action)
+            .then(response => {
+                if(response.status === 200)
+                {
+                    button.firstElementChild.classList.contains(heartAnimationClass) ? button.firstElementChild.classList.remove(heartAnimationClass) : null ;
+                    button.firstElementChild.classList.toggle(heartLikedClass);
+                    button.firstElementChild.classList.toggle(heartUnlikedClass);
+                }
+            })
+            .catch(error => console.error(error));
+
+        };
+    });
 
     postsDisplay = document.querySelector(".posts");
     getUser()
@@ -42,16 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const newPostDiv = document.createElement("div");
             const postContentDiv = document.createElement("div");
             const postButtonDiv = document.createElement("div");
+            const likesInfo = document.createElement("div");
 
             newPostDiv.classList.add("post");
             postContentDiv.classList.add("postsContent");
             postButtonDiv.classList.add("postsBtn");
+            likesInfo.classList.add("likesInfo");
 
             //finish
             const postUser = document.createElement("p");
             const postContentP = document.createElement("p");
             const datetimeP = document.createElement("p");
             const likeButton = document.createElement("button");
+            const likesDisplay = document.createElement("p");
             const commentButton = document.createElement("button");
 
             //attributes
@@ -65,14 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
             datetimeP.textContent = post.datetime;
 
             likeButton.classList.add("likeBtn");
+            likesDisplay.classList.add("likesDisplay");
+            likesDisplay.textContent = post.likes;
             if(post.is_liked)
             {
-                likeButton.innerHTML = heartLikedIcon + post.likes;
+                likeButton.innerHTML = heartLikedIcon;
             }
             else
             {
 
-                likeButton.innerHTML = heartUnlikedIcon + post.likes;
+                likeButton.innerHTML = heartUnlikedIcon;
                 // run animation (font awesome) when user hover on the heart icon.
                 likeButton.addEventListener("mouseenter", () => {
                     if(!likeButton.firstElementChild.classList.contains(heartLikedClass))
@@ -117,7 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
             postContentDiv.appendChild(postContentP);
             postContentDiv.appendChild(datetimeP);
 
-            postButtonDiv.appendChild(likeButton);
+            likesInfo.appendChild(likeButton);
+            likesInfo.appendChild(likesDisplay);
+            
+            postButtonDiv.appendChild(likesInfo);
             postButtonDiv.appendChild(commentButton);
 
             newPostDiv.appendChild(postContentDiv);
@@ -135,3 +163,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }); 
 
 });
+
+function likeBtnAnimation(event){
+    if(!event.target.firstElementChild.classList.contains(heartLikedClass))
+    {
+        if(event.type === "mouseleave")
+        {
+            event.target.firstElementChild.classList.remove(heartAnimationClass);
+            return;
+        }
+        event.target.firstElementChild.classList.add(heartAnimationClass);
+    }
+}

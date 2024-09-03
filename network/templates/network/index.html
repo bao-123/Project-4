@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block script %}
-<script src="{% static 'network/index.js' %}" type="module" ></script>
+<script src="{% static 'network/index.js' %}" type="module"></script>
 {% endblock %}
 
 {% block body %}
@@ -38,14 +38,15 @@
                 </div> 
 
                 <div class="postsBtn">
-                    <div>
-                        <button class="likeBtn">
+                    <div class="likesInfo">
+                        <button class="likeBtn" data-post_id="{{ post.id }}"> <!-- Data-id of this button is the post's id-->
                             {% if post.is_liked %} <!-- Check if user is liked the post or not -->
-                            <i class="fa-solid fa-heart-circle-check fa-lg"></i>{{ post.likes }}
+                            <i class="fa-solid fa-heart-circle-check fa-lg"></i>
                             {% else %}
-                            <i class="fa-solid fa-heart-circle-plus fa-lg"></i> {{ post.likes }}
+                            <i class="fa-solid fa-heart-circle-plus fa-lg"></i>
                             {% endif %}
                         </button>
+                        <p class="likesDisplay">{{ post.likes }}</p>
                     </div>
                     <button class="commentBtn">Comment</button>
                 </div>
