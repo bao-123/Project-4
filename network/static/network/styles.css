@@ -350,3 +350,11 @@ body
     margin-right: auto;
     align-items: baseline;
 }
+
+.commentForm
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}

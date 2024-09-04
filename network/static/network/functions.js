@@ -181,7 +181,9 @@ export async function comment(postId, content)
         {
             throw new Error("Failed to post comment");
         }
-        return {status: response.status, message: (await response.json).message};
+        const message = (await response.json()).message;
+
+        return {status: response.status, message: message};
     } catch (error) 
     {
         console.error(error);    
