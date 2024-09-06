@@ -37,7 +37,7 @@
                     <p class="postContent">{{ post.content }}</p>
                     <p class="datetime"> {{ post.datetime }} </p>
                 </div> 
-
+                <!--the last element of this div is where we store the post's id-->
                 <div class="postsBtn" data-post_id="{{ post.id }}">
                     <div class="likesInfo">
                         <button class="likeBtn" data-post_id="{{ post.id }}"> <!-- Data-id of this button is the post's id-->
@@ -51,7 +51,6 @@
                     </div>
                     <button class="commentBtn">Comment</button>
                 </div>
-
             </div>
         {% endfor %}
      </div>

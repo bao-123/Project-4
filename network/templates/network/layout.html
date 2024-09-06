@@ -12,7 +12,7 @@
         <!--Include font awesome-->
         <script src="https://kit.fontawesome.com/42c4b72ce4.js" crossorigin="anonymous"></script>
         
-        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+        {% block style %}<link href="{% static 'network/styles.css' %}" rel="stylesheet">{% endblock %}
         {% block script %}{% endblock %}
     </head>
     <body>

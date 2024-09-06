@@ -1,8 +1,8 @@
 //contants
-const postURL = "/post";
 const getPostsURL = "/posts";
 const likePostURL = "/like";
 const commentURL = "/comment";
+export const postURL = "/post";
 export const getUserURL = "/user";
 export const messageDivId = "messageDiv";
 
@@ -184,6 +184,7 @@ export async function comment(postId, content)
         const message = (await response.json()).message;
 
         return {status: response.status, message: message};
+        
     } catch (error) 
     {
         console.error(error);    

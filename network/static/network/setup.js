@@ -1,7 +1,8 @@
-import {comment, displayMessage, messageDivId} from "./functions.js"
+import {comment, displayMessage, messageDivId, postURL} from "./functions.js"
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    //comment buttons
     document.querySelectorAll(".commentBtn").forEach(button => {
         button.onclick = () => {
             const postId = Number(button.parentElement.dataset.post_id);
@@ -60,5 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
             button.parentElement.appendChild(commentForm);
 
         };
+    });
+    //posts
+    document.querySelectorAll(".post").forEach(post => {
+        post.addEventListener("click", () => {
+            //get post's id
+            //we have stored the post's id in the last element of the div
+            const postId = post.lastElementChild.dataset.post_id;
+
+            //redirect user to the view post page
+            location.href = `${postURL}/${postId}`;
+        });
     });
 });

@@ -1,11 +1,46 @@
 {% extends 'network/layout.html' %}
 {% load static %}
 
-{% block script %}{% endblock %}
+{% block script %}<script src="{% static 'network/post.js' %}"></script>{% endblock %}
+{% block style %} <link href="{% static 'network/post.css' %}" rel="stylesheet">{% endblock %}
+
 {% block title %} Post {% endblock %}
 
 {% block body %}
 
 <!-- TODO -->
+    <div class="postDisplay">
+        <div class="postInfoDisplay">
+            <div class="userInfoDiv">
+                <div class="userInfo">
+                    <a href="{% url 'view_user' post.user.id %}"><p class="username">{{ post.user.username }}</p></a>
+                    <p class="userEmail">{{ post.user.email }}</p>
+                </div>
+                <div class="userFollowInfo">
+                    <p class="userFollowers">{{ post.user.followers }}</p>
+                    <p class="userFollowings"> {{ post.user.followings }}</p>
+                </div>
+            </div>
+            <div class="postInfo">
+                <p class="postContent">{{ post.content }}</p>
+                <div class="postButtons">
+                    <div class="postDiv">
+                        <button class="likeBtn">
+                            {% if post.is_liked %}
+                                <i class="fa-solid fa-heart-circle-check fa-lg"></i>
+                            {% else %}
+                                <i class="fa-solid fa-heart-circle-plus fa-lg"></i>
+                            {% endif %}
+                        </button>
+                        <p class="likes_count"> {{ post.likes }} </p>
+                    </div>
+                    <div class="postDiv">
+                        <button class="commentBtn">Comment</button>
+                        <p class="comment_count"> {{ post.comment_count }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

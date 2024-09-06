@@ -46,6 +46,9 @@ class Post(models.Model):
     def get_comments(self) -> list:
         return [comment.to_dict() for comment in self.comments.all()]
     
+    def comment_count(self) -> int:
+        return self.comments.count()
+    
     def like(self, user: User) -> None:
         if not self.likes.contains(self):
             self.likes.add(user)
@@ -65,6 +68,7 @@ class Post(models.Model):
             "content": self.content,
             "datetime": self.datetime.strftime("%d/%m/%Y, %H:%M:%S"),
             "likes": self.get_likes(),
+            "comments": self.comment_count(),
             "is_liked": self.likes.contains(user) if user else False
         }
 

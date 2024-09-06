@@ -13,7 +13,7 @@
                     <a class="nav-link" href="{% url 'view_user' user.id %}"><p class="postUser">{{ user.username }}</p> </a>
                     <p class="userEmail">{{ user.email }}</p>
                 </div>
-                <button class="details" data-id="{{ user.id }}">Details</button>
+                <a href="{% url 'view_user' user.id %}" class="btn btn-outline-info h-auto">Details</a>
             </div>
             <div class="userInfoDiv">
                 <div>

@@ -74,6 +74,20 @@ def register(request):
         return render(request, "network/register.html")
 
 
+#function to render a page for a singel post.
+@login_required(login_url="login")
+def view_post(request, post_id):
+    if request.method != "GET":
+        return HttpResponseNotAllowed("method not allowed.")
+    try:
+        requested_post = Post.objects.get(pk=post_id)
+
+        return render(request, "network/post.html", {
+            "post": requested_post.to_dict()
+        })
+    except:
+        return HttpResponseNotFound("doesn't found any post with this id")
+    
 #function to post a new post.
 login_required(login_url="login")
 def post(request):
