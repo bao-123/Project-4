@@ -25,9 +25,9 @@
     <!-- Display posts here -->
      <div class="posts">
         {% for post in posts %}
-            <div class="post">
+            <div class="post"  data-post_id="{{ post.id }}">
                 <div class="postsContent">
-                    <a  class="nav-link" href="{% url 'view_user' post.user.id %}"> <p class="postUser">{{ post.user.username }}</p></a>
+                    <a class="nav-link link" href="{% url 'view_user' post.user.id %}"><p class="postUser">{{ post.user.username }}</p></a>
 
                     <!-- fix here -->
                     {% if user.id == post.user.id %}
@@ -38,7 +38,7 @@
                     <p class="datetime"> {{ post.datetime }} </p>
                 </div> 
                 <!--the last element of this div is where we store the post's id-->
-                <div class="postsBtn" data-post_id="{{ post.id }}">
+                <div class="postsBtn">
                     <div class="likesInfo">
                         <button class="likeBtn" data-post_id="{{ post.id }}"> <!-- Data-id of this button is the post's id-->
                             {% if post.is_liked %} <!-- Check if user is liked the post or not -->

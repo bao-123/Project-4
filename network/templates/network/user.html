@@ -28,7 +28,7 @@
         <hr>
         <div class="posts">
             {% for post in USER.posts %}
-            <div class="post">
+            <div class="post" data-post_id="{{ post.id }}">
                 <div class="postsContent">
                     <a class="nav-link" href="{%url 'view_user' post.user.id %}"> <p class="postUser"> {{ post.user.username }}</p> </a>
                     {% if user == post.user %}

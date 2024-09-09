@@ -1,11 +1,13 @@
-import {comment, displayMessage, messageDivId, postURL} from "./functions.js"
+import {comment, displayMessage, messageDivId, postURL, redirectTo} from "./functions.js"
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
     //comment buttons
     document.querySelectorAll(".commentBtn").forEach(button => {
-        button.onclick = () => {
-            const postId = Number(button.parentElement.dataset.post_id);
+        button.addEventListener("click", event =>  {
+            const postId = Number(button.parentElement.parentElement.dataset.post_id); //get the post's id.
             //TODO
             if(button.parentElement.querySelector(".commentForm"))
             {
@@ -59,18 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             button.parentElement.appendChild(commentForm);
-
-        };
+        });
     });
     //posts
     document.querySelectorAll(".post").forEach(post => {
-        post.addEventListener("click", () => {
-            //get post's id
-            //we have stored the post's id in the last element of the div
-            const postId = post.lastElementChild.dataset.post_id;
+        //get post's id.
+        const postId = post.dataset.post_id; 
+        post.addEventListener("click", event => {
+            // .likeBtn,.fa-solid, .commentBtn, .editBtn
+            const postFunctionalityButtons = Array.from(post.querySelectorAll(".likeBtn, .fa-solid, .commentBtn, .editBtn, .form-control, .btn-outline-primary"));
 
-            //redirect user to the view post page
-            location.href = `${postURL}/${postId}`;
+            if( !(postFunctionalityButtons.includes(event.target)) )
+            {
+                redirectTo(`${postURL}/${postId}`);
+            }
         });
     });
 });

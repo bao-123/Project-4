@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import json
-from django.contrib.auth.models import AnonymousUser
 
 from .models import *
 
@@ -14,7 +14,8 @@ from .models import *
 @login_required(login_url="login")
 def index(request):
 
-    posts = [post.to_dict(user=request.user) for post in Post.objects.order_by("-datetime").all()]
+    #get the 10 last posts.
+    posts = [post.to_dict(user=request.user) for post in Post.objects.order_by("-datetime")[:10]]
 
     
     return render(request, "network/index.html", {
@@ -125,12 +126,24 @@ def get_posts(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed("Method not allowed.")
     
+    page_count: int = request.GET["page"]
+
     posts = Post.objects.order_by("-datetime").all()
 
-    return JsonResponse({
-        "posts": [post.to_dict(user=request.user) for post in posts]
-    }, status=200)
+    pages = Paginator(posts, (posts.count()//10)+1)
 
+    if page_count > 0 and page_count <= pages.page_count:
+        page = pages.page(page_count)
+
+        return JsonResponse({
+        "posts": [post.to_dict(user=request.user) for post in page],
+        "is_end": not page.has_next(),
+        "is_first": not page.has_previous()
+        }, status=200)
+    
+    return JsonResponse({
+        "message": "Invalid page's index"
+    }, status=400)
 
 def get_user(request):
     if request.method == "GET":

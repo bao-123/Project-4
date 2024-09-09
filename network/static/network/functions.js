@@ -74,11 +74,11 @@ export function displayMessage(message, type, divID, size="lg")
 
 }
 
-export async function getPosts()
+export async function getPosts(pageCount)
 {
     try
     {
-        const response = await fetch(getPostsURL);
+        const response = await fetch(`${getPostsURL}?page=${pageCount}`);
         if(response.status !== 200)
         {
             displayMessage("Error while fetching data.", "danger", messageDivId);
@@ -87,7 +87,7 @@ export async function getPosts()
 
         const data = await response.json();
 
-        return data.posts;
+        return data;
     }
     catch(error)
     {
@@ -189,4 +189,9 @@ export async function comment(postId, content)
     {
         console.error(error);    
     }
+}
+
+export function redirectTo(URL)
+{
+    location.href = URL;
 }

@@ -127,6 +127,7 @@ body
 {
     font-size: 18px;
     font-weight: 500;
+    width: fit-content;
     color: rgb(34, 34, 34);
     margin-bottom: 0;
     transition: 0.5s ease-in-out;
@@ -357,4 +358,9 @@ body
     flex-direction: row;
     flex-wrap: wrap;
     row-gap: 10px;
+}
+
+.link
+{
+    width: fit-content;
 }

@@ -13,7 +13,7 @@
         <div class="postInfoDisplay">
             <div class="userInfoDiv">
                 <div class="userInfo">
-                    <a href="{% url 'view_user' post.user.id %}"><p class="username">{{ post.user.username }}</p></a>
+                    <a class="nav-link link" href="{% url 'view_user' post.user.id %}"><p class="username">{{ post.user.username }}</p></a>
                     <p class="userEmail">{{ post.user.email }}</p>
                 </div>
                 <div class="userFollowInfo">

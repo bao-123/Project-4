@@ -1,6 +1,8 @@
-import {getUser, displayMessage, getUserURL, messageDivId, getCSRFToken } from "./functions.js"
+import {getUser, displayMessage, getUserURL, messageDivId, getCSRFToken, redirectTo, postURL } from "./functions.js"
 let user;
 let username;
+let pageCount = 1; //page count will be initialized at 0.
+
 document.addEventListener("DOMContentLoaded", async function() {
     const csrfToken = getCSRFToken();
     const followBtn = document.querySelector("#followBtn");
@@ -52,5 +54,12 @@ document.addEventListener("DOMContentLoaded", async function() {
         //get user'new followers count.
         const new_data = await getUser(username);
         followersDisplay.innerHTML = `Followers: ${new_data.user.followers}`;
+    });
+
+    document.querySelectorAll(".post").forEach(post => {
+        const postId = post.dataset.post_id;
+        post.addEventListener("click", () => {
+            redirectTo(`${postURL}/${postId}`);
+        });
     });
 });
