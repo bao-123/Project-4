@@ -54,4 +54,13 @@
             </div>
         {% endfor %}
      </div>
+     <div class="text-center mb-3">
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary">Previous</button>
+            {% for page in page_count %}
+                <button class="btn btn-outline-primary" data-page_id="{{ page }}">{{ page }}</button>
+            {% endfor %}
+            <button class="btn btn-outline-primary">Next</button>
+        </div>
+    </div>
 {% endblock %}

@@ -74,7 +74,7 @@ export function displayMessage(message, type, divID, size="lg")
 
 }
 
-export async function getPosts(pageCount)
+export async function getPosts(pageCount=1)
 {
     try
     {

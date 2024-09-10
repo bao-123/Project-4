@@ -41,6 +41,23 @@
     }
 }
 
+/* check */
+@keyframes postAppear
+{
+    from
+    {
+        width: 0;
+        padding: 0;
+        height: 0;
+    }
+    to
+    {
+        width: 100%;
+        padding: 100%;
+        height: 100%;
+    }
+}
+
 body
 {
     margin: 0;
@@ -106,6 +123,7 @@ body
     display: flex;
     flex-direction: column;
     row-gap: 3rem;
+    margin-bottom: 20px;
 }
 
 .post
@@ -114,6 +132,7 @@ body
     padding: 10px;
     background-color: #f1f1f1;
     transition: 0.5s;
+    animation: appear 2s ease-in;
 }
 
 .post:hover

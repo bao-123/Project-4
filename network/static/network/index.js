@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         //loads posts from database.
-        const newPosts = await getPosts();
+        const data = await getPosts();
+        const newPosts = data.posts;
         //clear posts
         postsDisplay.innerHTML = "";
 

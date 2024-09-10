@@ -19,7 +19,8 @@ def index(request):
 
     
     return render(request, "network/index.html", {
-        "posts": posts
+        "posts": posts,
+        "page_count": range(1, (Post.objects.count()//10)+1)
     })
 
 
@@ -126,13 +127,15 @@ def get_posts(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed("Method not allowed.")
     
-    page_count: int = request.GET["page"]
+    page_count: int = int(request.GET["page"])
+    print(page_count)
+    print(type(page_count))
 
     posts = Post.objects.order_by("-datetime").all()
 
     pages = Paginator(posts, (posts.count()//10)+1)
 
-    if page_count > 0 and page_count <= pages.page_count:
+    if page_count > 0 and page_count <= pages.num_pages:
         page = pages.page(page_count)
 
         return JsonResponse({
